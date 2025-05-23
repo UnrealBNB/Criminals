@@ -1,0 +1,19 @@
+{
+  "name": "criminals/game",
+  "description": "Criminals Browser Game - Modern Rewrite",
+  "type": "project",
+  "require": {
+    "php": ">=7.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    },
+    "files": [
+      "src/helpers.php"
+    ]
+  },
+  "config": {
+    "optimize-autoloader": true
+  }
+}

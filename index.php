@@ -1,30 +1,29 @@
 <?php
-/*
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
-
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+/**
+ * Criminals Game - Modern Rewrite
+ * Single Entry Point
  */
- 
- // check if installation folder is still availible
-if (file_exists('install/index.php')) {
-	header('Location: install/');
-	exit();
-}
 
-// launch index
-require_once('init.php');
+// Set error reporting for development
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-// Check if user is loggedin, if so no need to be here...
-if (LOGGEDIN == TRUE) { header('Location: ' . ROOT_URL . 'ingame/index.php'); }
+// Define paths
+define('ROOT_PATH', dirname(__DIR__) . '/');
+define('APP_PATH', ROOT_PATH . 'src/');
+define('PUBLIC_PATH', __DIR__ . '/');
 
-// Show index page
-$tpl->display('index.tpl');
+// Load the autoloader
+require_once ROOT_PATH . 'vendor/autoload.php';
+
+// Load environment configuration
+$config = require APP_PATH . 'Config/app.php';
+
+// Initialize the application
+$app = new \App\Core\Application($config);
+
+// Load routes
+require_once APP_PATH . 'Config/routes.php';
+
+// Run the application
+$app->run();
