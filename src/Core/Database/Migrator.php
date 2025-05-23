@@ -67,8 +67,13 @@ class Migrator
 
     private function getRanMigrations(): array
     {
-        return $this->db->fetchAll("SELECT migration FROM {$this->migrationTable}")
-            ?: [];
+        try {
+            $result = $this->db->fetchAll("SELECT migration FROM {$this->migrationTable}");
+            return array_column($result, 'migration');
+        } catch (\Throwable $e) {
+            // Table doesn't exist yet
+            return [];
+        }
     }
 
     private function runMigration(string $migration): void
