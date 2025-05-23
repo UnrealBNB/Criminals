@@ -50,6 +50,12 @@ RUN echo '[www]' > /usr/local/etc/php-fpm.d/www.conf && \
 COPY docker/nginx/default.conf /etc/nginx/sites-available/default
 RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
+# Create SSL directory
+RUN mkdir -p /etc/nginx/ssl
+
+# Copy SSL certificates if they exist (they'll be generated separately)
+COPY docker/nginx/ssl/* /etc/nginx/ssl/ 2>/dev/null || true
+
 # Copy supervisor config
 COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
