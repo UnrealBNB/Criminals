@@ -18,10 +18,10 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Services
-        $this->container->singleton(AttackService::class);
-        $this->container->singleton(ClanService::class);
-        $this->container->singleton(ClickService::class);
-        $this->container->singleton(GamblingService::class);
+        $this->container->singleton(AttackService::class, AttackService::class);
+        $this->container->singleton(ClanService::class, ClanService::class);
+        $this->container->singleton(ClickService::class, ClickService::class);
+        $this->container->singleton(GamblingService::class, GamblingService::class);
 
         // Logger
         $this->container->singleton(Logger::class, function () {
