@@ -162,3 +162,118 @@ class GamblingController extends Controller
         }
 
         $user = $this->auth()->user();
+        $guess = (int) $request->request->get('guess'); // 1=higher, 2=lower
+        $currentNumber = (int) $request->request->get('number');
+
+        $result = $this->gamblingService->playHigherLower($user, $guess, $currentNumber);
+
+        if ($result['won']) {
+            flash('success', 'Correct choice! You advance to the next round!');
+        } else {
+            flash('error', 'Sorry, wrong guess! Better luck next time!');
+        }
+
+        return $this->redirect('/game/gambling/higher-lower');
+    }
+
+    public function bankRobbery(Request $request): Response
+    {
+        if ($request->isMethod('GET')) {
+            return $this->view('game.gambling.bank-robbery', [
+                'user' => $this->auth()->user(),
+            ]);
+        }
+
+        $user = $this->auth()->user();
+
+        if ($user->cash < 10000) {
+            flash('error', 'Not enough cash to rob a bank!');
+            return $this->back();
+        }
+
+        $result = $this->gamblingService->playBankRobbery($user);
+
+        if ($result['success']) {
+            flash('success', 'The robbery was successful! You won 10,000!');
+        } else {
+            flash('error', 'The police caught you and you had to pay a fine of 10,000 to get free!');
+        }
+
+        return $this->back();
+    }
+
+    public function horseRace(Request $request): Response
+    {
+        if ($request->isMethod('GET')) {
+            $user = $this->auth()->user();
+            $currentBet = $this->gamblingService->getCurrentHorseRaceBet($user);
+
+            return $this->view('game.gambling.horse-race', [
+                'user' => $user,
+                'currentBet' => $currentBet,
+            ]);
+        }
+
+        $user = $this->auth()->user();
+        $horse = (int) $request->request->get('horse');
+        $ticket = (int) $request->request->get('ticket');
+
+        // Validate
+        if ($horse < 1 || $horse > 50) {
+            flash('error', 'Invalid horse selection');
+            return $this->back();
+        }
+
+        if (!in_array($ticket, [1, 2, 3])) {
+            flash('error', 'Invalid ticket type');
+            return $this->back();
+        }
+
+        $result = $this->gamblingService->placeHorseRaceBet($user, $horse, $ticket);
+
+        if ($result['success']) {
+            flash('success', "Bet placed on horse #{$horse}!");
+        } else {
+            flash('error', $result['message']);
+        }
+
+        return $this->back();
+    }
+
+    public function roulette(Request $request): Response
+    {
+        if ($request->isMethod('GET')) {
+            return $this->view('game.gambling.roulette', [
+                'user' => $this->auth()->user(),
+            ]);
+        }
+
+        $user = $this->auth()->user();
+        $color = (int) $request->request->get('color'); // 1=green, 2=black, 3=red
+        $number = $request->request->get('number');
+        $amount = (int) $request->request->get('amount');
+
+        // Validate amount
+        if ($amount <= 0 || !$user->canAfford($amount)) {
+            flash('error', 'Invalid bet amount');
+            return $this->back();
+        }
+
+        // Convert number
+        if ($number === 'cnul' || $number === '0') {
+            $number = 0;
+        } else {
+            $number = (int) $number;
+        }
+
+        $result = $this->gamblingService->playRoulette($user, $color, $number, $amount);
+
+        if ($result['won']) {
+            flash('success', "You won! The ball landed on {$result['winningNumber']}. You won {$result['winnings']}!");
+        } else {
+            flash('error', "You lost! The ball landed on {$result['winningNumber']}.");
+        }
+
+        return $this->back();
+    }
+}
