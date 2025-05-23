@@ -1,62 +1,96 @@
 <?php $this->extends('layouts.game') ?>
 
 <?php $this->section('game_content') ?>
-    <div class="messages">
-        <h1>Inbox</h1>
+    <div class="profile">
+        <h1><?= $this->e($user->username) ?>'s Profile</h1>
 
-        <div class="message-actions">
-            <a href="/game/messages/compose" class="btn btn-primary">Compose</a>
-            <a href="/game/messages/outbox" class="btn btn-secondary">Outbox</a>
+        <div class="profile-sections">
+            <div class="section">
+                <h2>Player Information</h2>
+                <table>
+                    <tr>
+                        <td>Type:</td>
+                        <td><?= $this->e($user->getTypeName()) ?></td>
+                    </tr>
+                    <tr>
+                        <td>Rank:</td>
+                        <td><?= $this->e($user->getRank()) ?></td>
+                    </tr>
+                    <tr>
+                        <td>Country:</td>
+                        <td><?= $this->e($user->getCountryName()) ?></td>
+                    </tr>
+                    <tr>
+                        <td>Attack Power:</td>
+                        <td><?= number_format($user->getTotalAttackPower()) ?></td>
+                    </tr>
+                    <tr>
+                        <td>Defence Power:</td>
+                        <td><?= number_format($user->getTotalDefencePower()) ?></td>
+                    </tr>
+                    <tr>
+                        <td>Clicks:</td>
+                        <td><?= number_format($user->clicks) ?></td>
+                    </tr>
+                    <?php if ($user->isInClan()): ?>
+                        <tr>
+                            <td>Clan:</td>
+                            <td><?= $this->e($user->clan()->clan_name) ?></td>
+                        </tr>
+                    <?php endif; ?>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>Statistics</h2>
+                <table>
+                    <tr>
+                        <td>Attacks Won:</td>
+                        <td><?= number_format($user->attacks_won) ?></td>
+                    </tr>
+                    <tr>
+                        <td>Attacks Lost:</td>
+                        <td><?= number_format($user->attacks_lost) ?></td>
+                    </tr>
+                    <tr>
+                        <td>Win Rate:</td>
+                        <td>
+                            <?php
+                            $total = $user->attacks_won + $user->attacks_lost;
+                            echo $total > 0 ? round(($user->attacks_won / $total) * 100, 1) . '%' : 'N/A';
+                            ?>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <?php if ($user->website || $user->info): ?>
+                <div class="section">
+                    <h2>About</h2>
+                    <?php if ($user->website): ?>
+                        <p><strong>Website:</strong> <a href="<?= $this->e($user->website) ?>" target="_blank" rel="noopener"><?= $this->e($user->website) ?></a></p>
+                    <?php endif; ?>
+                    <?php if ($user->info): ?>
+                        <div class="user-info">
+                            <?= nl2br($this->e($user->info)) ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
         </div>
 
-        <?php if (empty($messages)): ?>
-            <p>No messages in your inbox.</p>
-        <?php else: ?>
-            <form method="POST" action="/game/messages/delete">
-                <?= $this->csrf() ?>
-                <input type="hidden" name="from" value="inbox">
-
-                <table class="messages-table">
-                    <thead>
-                    <tr>
-                        <th><input type="checkbox" id="select-all"></th>
-                        <th>From</th>
-                        <th>Subject</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($messages as $message): ?>
-                        <tr class="<?= !$message->isRead() ? 'unread' : '' ?>">
-                            <td>
-                                <input type="checkbox" name="id[<?= $message->message_id ?>]" value="1">
-                            </td>
-                            <td>
-                                <?php $sender = $message->sender(); ?>
-                                <?= $sender ? $this->e($sender->username) : 'System' ?>
-                            </td>
-                            <td>
-                                <a href="/game/messages/read/<?= $message->message_id ?>">
-                                    <?= $this->e($message->message_subject) ?>
-                                </a>
-                            </td>
-                            <td><?= $message->message_time->format('Y-m-d H:i') ?></td>
-                            <td><?= !$message->isRead() ? 'Unread' : 'Read' ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
-
-                <button type="submit" class="btn btn-danger">Delete Selected</button>
-            </form>
-        <?php endif; ?>
+        <div class="profile-actions">
+            <?php if ($isOwnProfile): ?>
+                <a href="/game/profile/edit" class="btn btn-primary">Edit Profile</a>
+                <p><strong>Your Click Link:</strong></p>
+                <input type="text" value="<?= $this->url('click/' . $user->id) ?>" readonly onclick="this.select()">
+            <?php else: ?>
+                <?php if ($currentUser->type !== $user->type && !$user->isProtected()): ?>
+                    <a href="/game/attack/<?= $user->id ?>" class="btn btn-danger">Attack</a>
+                <?php endif; ?>
+                <a href="/game/messages/compose/<?= $user->id ?>" class="btn btn-primary">Send Message</a>
+                <a href="/game/donate?to=<?= $this->e($user->username) ?>" class="btn btn-success">Donate Money</a>
+            <?php endif; ?>
+        </div>
     </div>
-
-    <script>
-        document.getElementById('select-all')?.addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('input[type="checkbox"][name^="id["]');
-            checkboxes.forEach(cb => cb.checked = this.checked);
-        });
-    </script>
 <?php $this->endSection() ?>
