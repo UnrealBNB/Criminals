@@ -76,10 +76,29 @@ class RouteServiceProvider extends ServiceProvider
 
         // Admin routes
         $router->group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function (Router $router) {
-            $router->get('/', 'Admin\DashboardController@index');
-            $router->get('/users', 'Admin\UserController@index');
-            $router->post('/users/{id}/reset', 'Admin\UserController@reset')->whereNumber('id');
-            $router->post('/users/{id}/delete', 'Admin\UserController@delete')->whereNumber('id');
+            $router->get('/', 'Admin\AdminDashboardController@index');
+
+            // User management
+            $router->get('/users', 'Admin\AdminUserController@index');
+            $router->get('/users/{id}', 'Admin\AdminUserController@show')->whereNumber('id');
+            $router->match(['GET', 'POST'], '/users/{id}/reset', 'Admin\AdminUserController@reset')->whereNumber('id');
+            $router->match(['GET', 'POST'], '/users/{id}/delete', 'Admin\AdminUserController@delete')->whereNumber('id');
+            $router->match(['GET', 'POST'], '/users/{id}/donate', 'Admin\AdminUserController@donate')->whereNumber('id');
+            $router->match(['GET', 'POST'], '/users/{id}/level', 'Admin\AdminUserController@changeLevel')->whereNumber('id');
+
+            // Message management
+            $router->get('/messages', 'Admin\AdminMessageController@index');
+            $router->match(['GET', 'POST'], '/messages/mass', 'Admin\AdminMessageController@sendMass');
+            $router->match(['GET', 'POST'], '/messages/type', 'Admin\AdminMessageController@sendToType');
+            $router->match(['GET', 'POST'], '/messages/country', 'Admin\AdminMessageController@sendToCountry');
+
+            // Settings
+            $router->get('/settings', 'Admin\AdminSettingsController@index');
+            $router->match(['GET', 'POST'], '/settings/theme', 'Admin\AdminSettingsController@updateTheme');
+            $router->match(['GET', 'POST'], '/settings/rules', 'Admin\AdminSettingsController@updateRules');
+            $router->match(['GET', 'POST'], '/settings/prices', 'Admin\AdminSettingsController@updatePrices');
+            $router->match(['GET', 'POST'], '/settings/game', 'Admin\AdminSettingsController@gameSettings');
+            $router->match(['GET', 'POST'], '/settings/maintenance', 'Admin\AdminSettingsController@maintenance');
         });
     }
 }
