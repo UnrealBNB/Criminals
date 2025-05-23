@@ -496,3 +496,52 @@ if (!function_exists('class_basename')) {
         return basename(str_replace('\\', '/', $class));
     }
 }
+if (!function_exists('database_path')) {
+    /**
+     * Get the database path
+     */
+    function database_path(string $path = ''): string
+    {
+        return app()->basePath('database' . ($path ? DIRECTORY_SEPARATOR . $path : ''));
+    }
+}
+
+if (!function_exists('storage_path')) {
+    /**
+     * Get the storage path
+     */
+    function storage_path(string $path = ''): string
+    {
+        return app()->storagePath($path);
+    }
+}
+
+if (!function_exists('base_path')) {
+    /**
+     * Get the base path
+     */
+    function base_path(string $path = ''): string
+    {
+        return app()->basePath($path);
+    }
+}
+
+if (!function_exists('resource_path')) {
+    /**
+     * Get the resource path
+     */
+    function resource_path(string $path = ''): string
+    {
+        return app()->resourcePath($path);
+    }
+}
+
+if (!function_exists('public_path')) {
+    /**
+     * Get the public path
+     */
+    function public_path(string $path = ''): string
+    {
+        return app()->publicPath($path);
+    }
+}
