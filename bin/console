@@ -1,0 +1,33 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use App\Core\Application;
+use App\Core\Console\ConsoleKernel;
+use App\Core\Container\Container;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+// Define paths
+define('ROOT_PATH', dirname(__DIR__) . DIRECTORY_SEPARATOR);
+define('APP_PATH', ROOT_PATH . 'src' . DIRECTORY_SEPARATOR);
+define('CONFIG_PATH', ROOT_PATH . 'config' . DIRECTORY_SEPARATOR);
+define('STORAGE_PATH', ROOT_PATH . 'storage' . DIRECTORY_SEPARATOR);
+define('PUBLIC_PATH', ROOT_PATH . 'public' . DIRECTORY_SEPARATOR);
+define('RESOURCES_PATH', ROOT_PATH . 'resources' . DIRECTORY_SEPARATOR);
+
+// Load environment
+$dotenv = Dotenv\Dotenv::createImmutable(ROOT_PATH);
+$dotenv->safeLoad();
+
+// Create container and bootstrap application
+$container = new Container();
+$app = new Application($container);
+$app->bootstrap();
+
+// Run console kernel
+$kernel = $container->get(ConsoleKernel::class);
+$status = $kernel->handle($argv);
+
+exit($status);
