@@ -1,0 +1,15 @@
+# Criminals Game Cron Jobs
+
+# Daily tasks - Run at 00:00
+0 0 * * * www-data /usr/local/bin/php /var/www/bin/console cron:daily >> /var/www/storage/logs/cron.log 2>&1
+
+# Hourly tasks - Run every hour
+0 * * * * www-data /usr/local/bin/php /var/www/bin/console cron:hourly >> /var/www/storage/logs/cron.log 2>&1
+
+# Horse race - Run every hour at :30
+30 * * * * www-data /usr/local/bin/php /var/www/bin/console cron:horse-race >> /var/www/storage/logs/cron.log 2>&1
+
+# Clear old sessions - Run daily at 03:00
+0 3 * * * www-data find /var/www/storage/framework/sessions -name "sess_*" -ctime +7 -delete
+
+# Empty line required at the end
