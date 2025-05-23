@@ -37,7 +37,6 @@ abstract class Model implements ArrayAccess, JsonSerializable
     {
         static::$db = $db;
     }
-
     protected static function getDatabase(): Database
     {
         if (static::$db === null) {

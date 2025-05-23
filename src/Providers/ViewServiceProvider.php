@@ -9,10 +9,12 @@ use App\Core\View\View;
 
 class ViewServiceProvider extends ServiceProvider
 {
+
     public function register(): void
     {
         $this->container->singleton(View::class, function ($container) {
-            return new View($container->get('app'), [
+            $app = $container->get(Application::class);
+            return new View($app, [
                 'base_url' => env('APP_URL', 'http://localhost'),
             ]);
         });

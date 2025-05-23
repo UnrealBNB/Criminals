@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core\Container;
 
+use App\Core\Application;
 use Closure;
 use ReflectionClass;
 use ReflectionException;
@@ -18,6 +19,14 @@ class Container
     private array $instances = [];
     private array $aliases = [];
 
+    public static function getInstance(): self
+    {
+        $app = Application::getInstance();
+        if (!$app) {
+            throw new RuntimeException('Application has not been initialized');
+        }
+        return $app->getContainer();
+    }
     public function bind(string $abstract, Closure|string $concrete, bool $shared = false): void
     {
         $this->bindings[$abstract] = [
