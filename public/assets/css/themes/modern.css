@@ -1,0 +1,87 @@
+/* Modern Theme for Criminals Game */
+
+[data-theme="modern"] {
+    --primary-color: #6366f1;
+    --secondary-color: #8b5cf6;
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --info-color: #06b6d4;
+    --dark-bg: #111827;
+    --light-bg: #f9fafb;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="modern"] body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+[data-theme="modern"] .header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+[data-theme="modern"] .btn {
+    border-radius: 8px;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+}
+
+[data-theme="modern"] .btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+[data-theme="modern"] .stat-box,
+[data-theme="modern"] .game-sidebar,
+[data-theme="modern"] .game-content {
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="modern"] input,
+[data-theme="modern"] select,
+[data-theme="modern"] textarea {
+    border-radius: 8px;
+}
+
+[data-theme="modern"] .alert {
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+[data-theme="modern"] .alert-success {
+    border-left-color: var(--success-color);
+}
+
+[data-theme="modern"] .alert-danger {
+    border-left-color: var(--danger-color);
+}
+
+[data-theme="modern"] table {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+[data-theme="modern"] .number-option span {
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+[data-theme="modern"] .shop-tabs {
+    border-bottom: none;
+    background: var(--light-bg);
+    padding: 0.5rem;
+    border-radius: 12px;
+}
+
+[data-theme="modern"] .shop-tabs a {
+    border-radius: 8px;
+    border: none;
+}
+
+[data-theme="modern"] .shop-tabs a.active {
+    background: white;
+    box-shadow: var(--shadow);
+}
