@@ -134,14 +134,13 @@ class Database
         if ($this->transactionLevel === 0) {
             $result = $this->pdo->beginTransaction();
         } else {
-            $this->execute("SAVEPOINT trans{$this->transactionLevel}");
+            $this->execute("SAVEPOINT trans_{$this->transactionLevel}");
             $result = true;
         }
 
         $this->transactionLevel++;
         return $result;
     }
-
     public function commit(): bool
     {
         $this->transactionLevel--;
