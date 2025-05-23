@@ -13,7 +13,7 @@ class CreateClansTable extends Migration
     {
         $this->schema->create('clans', function (Blueprint $table) {
             $table->id('clan_id');
-            $table->string('clan_name', 200)->unique();
+            $table->string('clan_name', 200);
             $table->integer('clan_owner_id')->unsigned();
             $table->integer('clan_type');
             $table->integer('clan_clicks')->default(0);
@@ -24,6 +24,7 @@ class CreateClansTable extends Migration
             $table->integer('bankleft')->default(10);
             $table->integer('clicks_today')->default(0);
 
+            $table->unique('clan_name');
             $table->index('clan_owner_id');
             $table->index('clan_name');
         });

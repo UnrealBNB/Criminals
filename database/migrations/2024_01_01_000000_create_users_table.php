@@ -13,9 +13,9 @@ class CreateUsersTable extends Migration
     {
         $this->schema->create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('username', 200)->unique();
+            $table->string('username', 200);
             $table->string('password', 250);
-            $table->string('email', 100)->unique();
+            $table->string('email', 100);
             $table->integer('type')->default(1);
             $table->integer('level')->default(0);
             $table->string('session_id', 100)->nullable();
@@ -40,6 +40,8 @@ class CreateUsersTable extends Migration
             $table->integer('bank_left')->default(5);
             $table->integer('country_id')->default(1);
 
+            $table->unique('username');
+            $table->unique('email');
             $table->index('username');
             $table->index('clan_id');
             $table->index('type');
