@@ -24,9 +24,11 @@ if [ ! -f .env ]; then
 fi
 
 # Set permissions
+# Set permissions
 echo "🔒 Setting permissions..."
 chmod -R 755 storage
 chmod +x bin/console
+chmod +x docker-setup.sh
 
 # Build and start containers
 echo "🐳 Building Docker containers..."
