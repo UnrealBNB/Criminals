@@ -9,11 +9,11 @@ use App\Core\View\View;
 
 class ViewServiceProvider extends ServiceProvider
 {
-
     public function register(): void
     {
         $this->container->singleton(View::class, function ($container) {
-            $app = $container->get(Application::class);
+            // Get the application instance directly from the global helper
+            $app = app();
             return new View($app, [
                 'base_url' => env('APP_URL', 'http://localhost'),
             ]);
